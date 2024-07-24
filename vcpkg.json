@@ -1,0 +1,13 @@
+{
+  "name": "libvncserver",
+  "version-string":"0.0.1",
+  "dependencies": [
+    "openssl",
+    "libjpeg-turbo",
+    "libpng",
+    {
+        "name": "ffmpeg",
+        "platform": "!android"
+    }
+  ]
+}
