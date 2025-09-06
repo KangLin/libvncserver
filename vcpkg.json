@@ -8,6 +8,8 @@
     {
         "name": "ffmpeg",
         "platform": "!android"
-    }
+    },
+    "lzo",
+    "zlib"
   ]
 }
