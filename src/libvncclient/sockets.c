@@ -495,8 +495,10 @@ ConnectClientToUnixSockWithTimeout(const char *sockFile, unsigned int timeout)
     return RFB_INVALID_SOCKET;
   }
 
-  if (!SetNonBlocking(sock))
-    return RFB_INVALID_SOCKET;
+  if (!SetNonBlocking(sock)) {
+      rfbCloseSocket(sock);
+      return RFB_INVALID_SOCKET;
+  }
 
   if (connect(sock, (struct sockaddr *)&addr, sizeof(addr.sun_family) + strlen(addr.sun_path)) < 0 &&
       !(errno == EINPROGRESS && sock_wait_for_connected(sock, timeout))) {
@@ -860,7 +862,12 @@ int WaitForMessage(rfbClient* client,unsigned int usecs)
   if (client->serverPort==-1)
     /* playing back vncrec file */
     return 1;
-  
+
+  /* Check if we have buffered data available */
+  if (client->buffered > 0) {
+    return 1;
+  }
+
   timeout.tv_sec=(usecs/1000000);
   timeout.tv_usec=(usecs%1000000);
 
